@@ -1,6 +1,6 @@
 # server
 
-This does all the backend stuff and posting handling. Its planned to work via interfaces to feature plugin support
+This is the core server of the docker stack. Its planned to work via interfaces (IPC Gateway etc.) to feature plugin support. The see my whole vision visit the deploy repo and look at the plan.png since that is my whole vision for this project.
 
 ## info
 
