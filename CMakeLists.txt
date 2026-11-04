@@ -8,7 +8,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 #Controller (Controller with main since he needs to be PID 1)
 add_executable(controller
-    main.cpp 
-    controller.cpp 
+    src/main.cpp 
+    src/controller.cpp 
 )
 
