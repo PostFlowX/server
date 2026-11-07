@@ -6,7 +6,7 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-COPY . .
+COPY . /app/
 
 RUN cmake -S . -B build -G Ninja \
     -DCMAKE_BUILD_TYPE=Release

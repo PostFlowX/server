@@ -1,4 +1,4 @@
-#include "./include/controller.hpp"
+#include "controller.hpp"
 
 #include <spawn.h>
 #include <sys/wait.h>
