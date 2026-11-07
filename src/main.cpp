@@ -1,4 +1,4 @@
-#include "controller.hpp"
+#include "./include/controller.hpp"
 
 int main() {
     controller controller;

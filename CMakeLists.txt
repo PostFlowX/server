@@ -12,3 +12,6 @@ add_executable(controller
     src/controller.cpp 
 )
 
+add_executable(executioner
+    src/executioner.cpp
+)
