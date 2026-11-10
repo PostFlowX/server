@@ -7,10 +7,12 @@
 class controller {
     
     public:
-        int start();
+        void startup();
 
     private:
+        void containerloop();
+        int startProcesses();
         std::vector<pid_t> processes;
-
-    bool startProcess(const std::string& executable);
+        bool startProcess(const std::string& executable);
+        
 };

@@ -1,0 +1,19 @@
+cmake_minimum_required(VERSION 3.25)
+project(postflowx-server LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+add_library(pfx_headers INTERFACE)
+target_include_directories(pfx_headers INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+#Make it a loop for the processes
+function(pfx_process name)
+    add_executable(${name} ${ARGN})
+    target_link_libraries(${name} PRIVATE pfx_headers)
+endfunction()
+
+pfx_process(controller  src/ctrl_main.cpp src/controller.cpp)
+pfx_process(executioner src/exec_main.cpp src/executioner.cpp)

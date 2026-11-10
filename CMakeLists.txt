@@ -14,12 +14,13 @@ target_include_directories(pfx_headers INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/inc
 #Controller (Controller with main since he needs to be PID 1)
 #The Classes need to be create as separate executables since we want them to run in separate processes
 add_executable(controller
-    src/main.cpp 
+    src/ctrl_main.cpp 
     src/controller.cpp 
 )
 target_link_libraries(controller PRIVATE pfx_headers)
 
 add_executable(executioner
+    src/exec_main.cpp
     src/executioner.cpp
 )
-target_link_libraries(controller PRIVATE pfx_headers)
+target_link_libraries(executioner PRIVATE pfx_headers)

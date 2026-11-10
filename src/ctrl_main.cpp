@@ -2,6 +2,7 @@
 
 int main() {
     controller controller;
-    
-    return controller.start();
+    controller.startup();
+
+    return 0;
 }
