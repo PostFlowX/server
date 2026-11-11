@@ -2,6 +2,7 @@
 
 int main() {
     executioner executioner;
+    executioner.start();
 
-    return executioner.start();
+    return 0;
 }

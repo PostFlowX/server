@@ -1,14 +1,25 @@
 #include "executioner.hpp"
 
+#include <iostream>
+#include <sys/wait.h>
+
 int executioner::start() {
     alive = true;
     aliveMessage();
 
-    return 0;
+    return containerloop();
 }
 
 //TestMessage
 void executioner::aliveMessage() {
-    std::cout << "EXEC: I am Alive!!" << std::endl;
-    std::cout << alive << std::endl;
+    std::cout << "Exec: I am Alive!! | Set alive: " << alive << std::endl;
+}
+
+int executioner::containerloop() {
+    while (true) {
+        //Placeholer
+
+        sleep(1);
+    }
+    return 0;
 }

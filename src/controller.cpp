@@ -6,7 +6,7 @@
 #include <cstring>
 
 //Boots up this instance
-void controller::startup() {
+int controller::startup() {
     std::cout << "Ctrl: I am Alive baby!\n";
     int i = startProcesses();
 
@@ -14,7 +14,7 @@ void controller::startup() {
         std::cerr << "Ctrl: My startup failed :(\n";
     }
 
-    containerloop();
+    return containerloop();
 }
 
 //Starts the processes that will be managed by controller class
@@ -23,6 +23,10 @@ int controller::startProcesses() {
     std::cout << "Ctrl: Starting processes... \n";
     //Working Dir in CMakeList will be app/ so everything is in the same directory at first and ./ should do the magic
     startProcess("./executioner");
+    startProcess("./fs");
+    startProcess("./ipc_gateway");
+    startProcess("./pmp");
+    startProcess("./watchdog");
 
     return 0;
 }
@@ -68,11 +72,13 @@ bool controller::startProcess(const std::string& executable) {
     return true;
 }
 
-void controller::containerloop() {
+//int because error codes
+int controller::containerloop() {
     while(true) {
         //Placeholder for other stuff
 
 
         sleep(1);
     }
+    return 0;
 }

@@ -1,10 +1,11 @@
-#include <iostream>
+#pragma once
 
 class executioner {
     public:
         int start();
-        void aliveMessage();
+        bool alive;
 
     private:
-        bool alive;
+        void aliveMessage();
+        int containerloop(); //int bc errorcode
 };

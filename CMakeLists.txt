@@ -24,3 +24,27 @@ add_executable(executioner
     src/executioner.cpp
 )
 target_link_libraries(executioner PRIVATE pfx_headers)
+
+add_executable(fs 
+    src/fs_main.cpp
+    src/fs.cpp
+)
+target_link_libraries(fs PRIVATE pfx_headers)
+
+add_executable(ipc_gateway
+    src/ipc_gateway_main.cpp
+    src/ipc_gateway.cpp 
+)
+target_link_libraries(ipc_gateway PRIVATE pfx_headers)
+
+add_executable(pmp
+    src/pmp_main.cpp 
+    src/pmp.cpp
+)
+target_link_libraries(pmp PRIVATE pfx_headers)
+
+add_executable(watchdog
+    src/watchdog_main.cpp
+    src/watchdog.cpp
+)
+target_link_libraries(watchdog PRIVATE pfx_headers)
