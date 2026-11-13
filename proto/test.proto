@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package postflowx.v1;
+
+service testService {
+    rpc test(TestRequest)
+        returns (TestResponse);
+}
+
+message TestRequest {
+    string component = 1;
+}
+
+message TestResponse {
+    bool recved = 1;
+    string status = 2;
+}
