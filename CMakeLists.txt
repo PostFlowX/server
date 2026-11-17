@@ -7,8 +7,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-set(PROTO_DIR ${CMAKE_CURRENT_SOURCE_DIR}/proto)
-set(GENERATED_DIR ${CMAKE_CURRENT_SOURCE_DIR}/protoGen)
+#set(PROTO_DIR ${CMAKE_CURRENT_SOURCE_DIR}/proto)
+#set(GENERATED_DIR ${CMAKE_CURRENT_SOURCE_DIR}/protoGen)
 
 file(MAKE_DIRECTORY "${GENERATED_DIR}")
 
@@ -19,41 +19,61 @@ find_package(gRPC CONFIG REQUIRED)
 add_library(pfx_headers INTERFACE)
 target_include_directories(pfx_headers INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
+set(GENERATED_DIR "${CMAKE_CURRENT_SOURCE_DIR}/protoGen/v1")
+
+add_library(pfx_proto STATIC
+    "${GENERATED_DIR}/test.pb.cc"
+    "${GENERATED_DIR}/test.pb.h"
+    "${GENERATED_DIR}/test.grpc.pb.cc"
+    "${GENERATED_DIR}/test.grpc.pb.h"
+)
+
+target_include_directories(pfx_proto PUBLIC
+    "${GENERATED_DIR}"
+)
+
+target_link_libraries(pfx_proto PUBLIC
+    protobuf::libprotobuf
+    gRPC::grpc++
+)
+#[[
 #Add the proto files so protobuf is able to compile
-add_library(pfx_proto STATIC PROTO_DIR)
-target_include_directories(pfx_proto PUBLIC GENERATED_DIR)
-target_link_libraries(pfx_proto PUBLIC protobuf::libprotobuf gRPC::grpc++)
+add_library(pfx_proto INTERFACE)
+target_include_directories(pfx_proto INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/protoGen/v1)
+target_link_libraries(pfx_proto INTERFACE protobuf::libprotobuf gRPC::grpc++)
+
 
 #This is only for the testchannel. I ll figure out how to do that for multiple proto files without it being specific for one 
 add_custom_command(
     OUTPUT
-        "${GENERATED_DIR}/v1/test.pb.cc"
-        "${GENERATED_DIR}/v1/test.pb.h"
-        "${GENERATED_DIR}/v1/test.grpc.pb.cc"
-        "${GENERATED_DIR}/v1/test.grpc.pb.h"
+        ${GENERATED_DIR}/v1/test.pb.cc
+        ${GENERATED_DIR}/v1/test.pb.h
+        ${GENERATED_DIR}/v1/test.grpc.pb.cc
+        ${GENERATED_DIR}/v1/test.grpc.pb.h
 
     COMMAND protobuf::protoc
 
     ARGS
-        --proto_path="${PROTO_DIR}"
-        --cpp_out="${GENERATED_DIR}"
-        --grpc_out="${GENERATED_DIR}"
+        --proto_path=${PROTO_DIR}
+        --cpp_out=${GENERATED_DIR}
+        --grpc_out=${GENERATED_DIR}
         --plugin=protoc-gen-grpc=$<TARGET_FILE:gRPC::grpc_cpp_plugin>
-        "${PROTO_DIR}/test.proto"
+        ${PROTO_DIR}/test.proto
 
     DEPENDS
-        "${PROTO_DIR}/test.proto"
+        ${PROTO_DIR}/test.proto
 
     VERBATIM
 )
 
+#[[
 add_library(testproto 
-    "${GENERATED_DIR}/v1/test.pb.cc"
-    "${GENERATED_DIR}/v1/test.grpc.pb.cc"
+    ${GENERATED_DIR}/v1/test.pb.cc
+    ${GENERATED_DIR}/v1/test.grpc.pb.cc
 )
 
 target_include_directories(testproto
-    PUBLIC "${GENERATED_DIR}"
+    PUBLIC ${GENERATED_DIR}
 )
 
 target_link_libraries(testproto
@@ -62,12 +82,14 @@ target_link_libraries(testproto
         gRPC::grpc++
 )
 #End of testchannel setup
+]]
 
 #Controller (Controller with main since he needs to be PID 1) //  Make a loop out of this shit later
 #The Classes need to be create as separate executables since we want them to run in separate processes
 add_executable(controller
     src/Ctrl/ctrl_main.cpp 
     src/Ctrl/controller.cpp 
+    src/IpcG/ChannelClasses/testchannel.cpp
 )
 target_link_libraries(controller PRIVATE pfx_headers pfx_proto)
 
@@ -86,6 +108,7 @@ target_link_libraries(fs PRIVATE pfx_headers pfx_proto)
 add_executable(ipc_gateway
     src/IpcG/ipc_gateway_main.cpp
     src/IpcG/ipc_gateway.cpp 
+    src/IpcG/ServiceClasses/testService.cpp
 )
 target_link_libraries(ipc_gateway PRIVATE pfx_headers pfx_proto)
 

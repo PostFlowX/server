@@ -5,6 +5,11 @@
 #include <iostream>
 #include <cstring>
 
+//constr
+controller::controller() {
+    startup();
+}
+
 //Boots up this instance
 int controller::startup() {
     std::cout << "Ctrl: I am Alive baby!\n";
@@ -13,6 +18,12 @@ int controller::startup() {
     if (i != 0) {
         std::cerr << "Ctrl: My startup failed :(\n";
     }
+
+    std::string adress = "0.0.0.0:50051";
+
+    sleep(1);
+
+    stubHandlerInstance = testchannel_ipcg_ctrl(adress);
 
     return containerloop();
 }
@@ -74,7 +85,7 @@ bool controller::startProcess(const std::string& executable) {
 
 //int because error codes
 int controller::containerloop() {
-    while(true) {
+    while (true) {
         //Placeholder for other stuff
 
 

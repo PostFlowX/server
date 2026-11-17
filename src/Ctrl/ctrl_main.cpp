@@ -1,8 +1,7 @@
 #include "controller.hpp"
 
 int main() {
-    controller controller;
-    controller.startup();
+    controller ctrl = controller();
 
     return 0;
 }
