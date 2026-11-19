@@ -15,6 +15,7 @@ class ipc_gateway {
 
     private:
         void aliveMessage();
+        void prepareFs(); //!Must be run before Starting ipc server
         int containerloop(); //int cause error code
         bool startIPCserver(); //starts with service and 
         bool stopIPCserver(); //stops the ipc server

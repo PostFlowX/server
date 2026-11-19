@@ -19,7 +19,7 @@ int controller::startup() {
         std::cerr << "Ctrl: My startup failed :(\n";
     }
 
-    std::string adress = "0.0.0.0:50051";
+    std::string adress = "/run/postflowx/ctrl/ctrl.sock";
 
     sleep(1);
 

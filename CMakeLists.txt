@@ -36,53 +36,6 @@ target_link_libraries(pfx_proto PUBLIC
     protobuf::libprotobuf
     gRPC::grpc++
 )
-#[[
-#Add the proto files so protobuf is able to compile
-add_library(pfx_proto INTERFACE)
-target_include_directories(pfx_proto INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/protoGen/v1)
-target_link_libraries(pfx_proto INTERFACE protobuf::libprotobuf gRPC::grpc++)
-
-
-#This is only for the testchannel. I ll figure out how to do that for multiple proto files without it being specific for one 
-add_custom_command(
-    OUTPUT
-        ${GENERATED_DIR}/v1/test.pb.cc
-        ${GENERATED_DIR}/v1/test.pb.h
-        ${GENERATED_DIR}/v1/test.grpc.pb.cc
-        ${GENERATED_DIR}/v1/test.grpc.pb.h
-
-    COMMAND protobuf::protoc
-
-    ARGS
-        --proto_path=${PROTO_DIR}
-        --cpp_out=${GENERATED_DIR}
-        --grpc_out=${GENERATED_DIR}
-        --plugin=protoc-gen-grpc=$<TARGET_FILE:gRPC::grpc_cpp_plugin>
-        ${PROTO_DIR}/test.proto
-
-    DEPENDS
-        ${PROTO_DIR}/test.proto
-
-    VERBATIM
-)
-
-#[[
-add_library(testproto 
-    ${GENERATED_DIR}/v1/test.pb.cc
-    ${GENERATED_DIR}/v1/test.grpc.pb.cc
-)
-
-target_include_directories(testproto
-    PUBLIC ${GENERATED_DIR}
-)
-
-target_link_libraries(testproto
-    PUBLIC
-        protobuf::libprotobuf
-        gRPC::grpc++
-)
-#End of testchannel setup
-]]
 
 #Controller (Controller with main since he needs to be PID 1) //  Make a loop out of this shit later
 #The Classes need to be create as separate executables since we want them to run in separate processes

@@ -1,8 +1,9 @@
 #include "ipc_gateway.hpp"
 
 #include <iostream>
-#include <sys/wait.h>
+//#include <sys/wait.h>
 #include <thread>
+#include <filesystem>
 
 ipc_gateway::ipc_gateway() {
     //testchannel_ctrl = std::make_unique<testchannel_ipcg_ctrl>();
@@ -13,11 +14,14 @@ int ipc_gateway::start() {
     alive = true;
     aliveMessage();
 
+    //Prepare file structure
+    prepareFs();
+
     //TODO: Make this if statement with ! and error message 
     if (startIPCserver()) {
         std::cout << "IpcG: Started gRPC IPC-Server!" << std::endl;
     }
-    //ipcServer->Wait();
+    //ipcServer->Wait(); //Not needed since containerloop keeps process alive
 
     return containerloop();
 }
@@ -45,6 +49,11 @@ bool ipc_gateway::startIPCserver() {
         "0.0.0.0:50051",
         grpc::InsecureServerCredentials()
     );
+    //Testpurpose
+    builder.AddListeningPort(
+        "unix:/run/postflowx/ctrl/ctrl.sock",
+        grpc::InsecureServerCredentials()
+    );
 
     //now the grpc services
     builder.RegisterService(tSimp.get());
@@ -63,3 +72,13 @@ bool ipc_gateway::stopIPCserver() {
 
     return true; //server stopped properly
 };
+
+//inits the folders for sockets which will be used for internal gRPC communication
+void ipc_gateway::prepareFs() {
+    std::filesystem::create_directories("/run/postflowx/Exec"); //executioner
+    std::filesystem::create_directories("/run/postflowx/IpcG"); //*Prolly wont be used i guess
+    std::filesystem::create_directories("/run/postflowx/WaDg"); //Watchdog
+    std::filesystem::create_directories("/run/postflowx/FsHa"); //Filesystemhandler
+    std::filesystem::create_directories("/run/postflowx/Ctrl"); //Controller
+    std::filesystem::create_directories("/run/postflowx/PlMP"); //Plugin Management Process
+}
