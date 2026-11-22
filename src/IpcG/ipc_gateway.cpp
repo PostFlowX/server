@@ -45,15 +45,17 @@ bool ipc_gateway::startIPCserver() {
     //init the builder
     grpc::ServerBuilder builder;
 
+    // TODO: Add certificate for web server connection
     builder.AddListeningPort( 
         "0.0.0.0:50051",
         grpc::InsecureServerCredentials()
     );
+
     //Testpurpose
-    builder.AddListeningPort(
-        "unix:/run/postflowx/ctrl/ctrl.sock",
-        grpc::InsecureServerCredentials()
-    );
+    builder.AddListeningPort("unix:/run/postflowx/Exec/exec.sock", grpc::InsecureServerCredentials());
+    builder.AddListeningPort("unix:/run/postflowx/FsHa/fsha.sock", grpc::InsecureServerCredentials());
+    builder.AddListeningPort("unix:/run/postflowx/WaDg/wadg.sock", grpc::InsecureServerCredentials());
+    builder.AddListeningPort("unix:/run/postflowx/PlMP/plmp.sock", grpc::InsecureServerCredentials());
 
     //now the grpc services
     builder.RegisterService(tSimp.get());
@@ -79,6 +81,6 @@ void ipc_gateway::prepareFs() {
     std::filesystem::create_directories("/run/postflowx/IpcG"); //*Prolly wont be used i guess
     std::filesystem::create_directories("/run/postflowx/WaDg"); //Watchdog
     std::filesystem::create_directories("/run/postflowx/FsHa"); //Filesystemhandler
-    std::filesystem::create_directories("/run/postflowx/Ctrl"); //Controller
+    std::filesystem::create_directories("/run/postflowx/Ctrl"); //*Wont be used since ctrl does not get a channel to ipcg
     std::filesystem::create_directories("/run/postflowx/PlMP"); //Plugin Management Process
 }
