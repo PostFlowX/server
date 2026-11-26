@@ -51,7 +51,7 @@ bool ipc_gateway::startIPCserver() {
         grpc::InsecureServerCredentials()
     );
 
-    //Testpurpose
+    //Internal processes
     builder.AddListeningPort("unix:/run/postflowx/Exec/exec.sock", grpc::InsecureServerCredentials());
     builder.AddListeningPort("unix:/run/postflowx/FsHa/fsha.sock", grpc::InsecureServerCredentials());
     builder.AddListeningPort("unix:/run/postflowx/WaDg/wadg.sock", grpc::InsecureServerCredentials());
